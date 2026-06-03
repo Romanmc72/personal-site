@@ -73,9 +73,19 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2rem 3rem;
-    mix-blend-mode: multiply;
+    padding: 1.5rem 3rem;
+    background: var(--paper);
+    transition: background 0.4s ease, border-color 0.4s ease, padding 0.4s ease;
+    border-bottom: 1px solid transparent;
   }
+  nav.nav-dark {
+    background: var(--ink);
+    border-bottom: 1px solid rgba(245,242,236,0.1);
+  }
+  nav.scrolled {
+    padding: 1rem 3rem;
+  }
+
   .nav-logo {
     font-family: var(--mono);
     font-size: 0.7rem;
@@ -84,7 +94,12 @@
     color: var(--muted);
     opacity: 0;
     animation: fadeIn 1s 0.5s forwards;
+    transition: color 0.4s ease;
   }
+  nav.nav-dark .nav-logo {
+    color: rgba(245,242,236,0.7);
+  }
+
   .nav-links {
     display: flex;
     gap: 2.5rem;
@@ -100,8 +115,15 @@
     transition: color 0.3s;
     opacity: 0;
     animation: fadeIn 1s 0.7s forwards;
+    transition: color 0.4s ease;
   }
   .nav-links a:hover { color: var(--ink); }
+  nav.nav-dark .nav-links a {
+    color: rgba(245,242,236,0.6);
+  }
+  nav.nav-dark .nav-links a:hover {
+    color: var(--paper);
+  }
 
   /* ── HERO ── */
   .hero {
@@ -509,11 +531,10 @@
   .stack-items {
     font-family: var(--serif);
     font-size: 1rem;
-    font-weight: 300;
-    color: var(--muted);
+    font-weight: 400;
+    color: var(--ink);
     line-height: 1.8;
   }
-  .stack-items strong { color: var(--ink); font-weight: 400; }
 
   .stack-visual { position: relative; }
 
@@ -879,15 +900,15 @@
   <div style="margin-top:4rem;">
     <div class="stack-category">
       <span class="stack-cat-label">Languages</span>
-      <span class="stack-items"><strong>TypeScript</strong> · <strong>Python</strong> · <strong>Go</strong> · Java · SQL · VBA</span>
+      <span class="stack-items">TypeScript · Python · Go · Java · SQL · VBA</span>
     </div>
     <div class="stack-category">
       <span class="stack-cat-label">Frontend</span>
-      <span class="stack-items"><strong>React</strong> · React Native · HTML/CSS</span>
+      <span class="stack-items">React · React Native · HTML/CSS</span>
     </div>
     <div class="stack-category">
       <span class="stack-cat-label">Cloud / AWS</span>
-      <span class="stack-items"><strong>CDK</strong> · Lambda · ECS · API Gateway · Redshift · DynamoDB · Glue · Kinesis · S3 · CloudWatch · EventBridge · Step Functions</span>
+      <span class="stack-items">CDK · Lambda · ECS · API Gateway · Redshift · DynamoDB · Glue · Kinesis · S3 · CloudWatch · EventBridge · Step Functions</span>
     </div>
     <div class="stack-category">
       <span class="stack-cat-label">Cloud / GCP</span>
@@ -895,11 +916,11 @@
     </div>
     <div class="stack-category">
       <span class="stack-cat-label">Data</span>
-      <span class="stack-items"><strong>Apache Spark</strong> · Apache Airflow · MongoDB · Apache Beam · Redshift Spectrum</span>
+      <span class="stack-items">Apache Spark · Apache Airflow · MongoDB · Apache Beam · Redshift Spectrum</span>
     </div>
     <div class="stack-category">
       <span class="stack-cat-label">Practices</span>
-      <span class="stack-items"><strong>IaC</strong> · CICD · Microservices · Event-Driven Architecture · REST APIs · Agile</span>
+      <span class="stack-items">IaC · CICD · Microservices · Event-Driven Architecture · REST APIs · Agile</span>
     </div>
   </div>
 </section>
@@ -1021,9 +1042,31 @@
 
   // Progress bar
   const bar = document.getElementById('progressBar');
+  const nav = document.querySelector('nav');
+  const impact = document.getElementById('impact');
+
   window.addEventListener('scroll', () => {
+    // Progress
     const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
     bar.style.width = pct + '%';
+
+    // Nav Background / Dark Mode
+    const navRect = nav.getBoundingClientRect();
+    const impactRect = impact.getBoundingClientRect();
+    
+    // Check if nav is overlapping the dark impact section
+    if (impactRect.top <= navRect.bottom && impactRect.bottom >= navRect.top) {
+      nav.classList.add('nav-dark');
+    } else {
+      nav.classList.remove('nav-dark');
+    }
+
+    // Nav padding on scroll
+    if (window.scrollY > 50) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
   });
 
   // Intersection observer for reveals
