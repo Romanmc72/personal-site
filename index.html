@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roman Czerwinski — Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0e0d;
+    --paper: #f5f2ec;
+    --gold: #b8965a;
+    --gold-light: #d4b07a;
+    --muted: #7a7570;
+    --rule: rgba(14,14,13,0.12);
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+    mix-blend-mode: multiply;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 32px; height: 32px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, opacity 0.2s ease;
+    opacity: 0.5;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 1px;
+    background: var(--gold);
+    z-index: 1000;
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  /* Navigation */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 3rem;
+    mix-blend-mode: multiply;
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    opacity: 0;
+    animation: fadeIn 1s 0.5s forwards;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+    transition: color 0.3s;
+    opacity: 0;
+    animation: fadeIn 1s 0.7s forwards;
+  }
+  .nav-links a:hover { color: var(--ink); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 10vw;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    right: -2vw;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--serif);
+    font-size: clamp(12rem, 22vw, 22rem);
+    font-weight: 300;
+    color: rgba(14,14,13,0.04);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: slideUp 0.9s 0.3s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 8vw, 8rem);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    opacity: 0;
+    animation: slideUp 1s 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-desc {
+    margin-top: 2.5rem;
+    max-width: 38ch;
+    font-size: 1.15rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--muted);
+    opacity: 0;
+    animation: slideUp 1s 0.75s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 3rem;
+    margin-top: 3.5rem;
+    opacity: 0;
+    animation: slideUp 1s 1s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .meta-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .meta-value {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: var(--ink);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 3rem;
+    left: 10vw;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0;
+    animation: fadeIn 1s 1.5s forwards;
+  }
+  .scroll-line {
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    transform-origin: left;
+    animation: expandLine 1.5s 2s ease forwards;
+    transform: scaleX(0);
+  }
+  .scroll-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 8rem 10vw;
+    position: relative;
+  }
+
+  .section-number {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 18ch;
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: var(--rule);
+    margin: 0;
+  }
+
+  /* ── STORY / INTRO ── */
+  .story-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8rem;
+    align-items: center;
+  }
+
+  .story-text p {
+    font-size: 1.25rem;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+  .story-text p strong {
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  .origin-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid var(--rule);
+    margin-top: 1rem;
+  }
+  .origin-badge span {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Trajectory diagram */
+  .trajectory-svg-wrap {
+    position: relative;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background: var(--rule);
+  }
+
+  .timeline-item {
+    position: relative;
+    padding: 0 0 4rem 3rem;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .timeline-dot {
+    position: absolute;
+    left: -4px;
+    top: 0.5rem;
+    width: 8px; height: 8px;
+    border: 1px solid var(--gold);
+    background: var(--paper);
+    border-radius: 50%;
+    transition: background 0.3s;
+  }
+  .timeline-item:hover .timeline-dot { background: var(--gold); }
+
+  .timeline-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .timeline-date {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .timeline-company {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .timeline-role {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+  .timeline-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--rule);
+    color: var(--muted);
+    text-transform: uppercase;
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .tag:hover { border-color: var(--gold); color: var(--ink); }
+  .timeline-detail {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 55ch;
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 1px solid var(--rule);
+    margin-top: 4rem;
+  }
+  .skill-cell {
+    padding: 2.5rem;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .skill-cell.visible { opacity: 1; transform: translateY(0); }
+  .skill-cell:nth-child(3n) { border-right: none; }
+  .skill-cell:nth-child(n+7) { border-bottom: none; }
+
+  .skill-cell::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 0;
+    background: rgba(184,150,90,0.05);
+    transition: height 0.4s ease;
+  }
+  .skill-cell:hover::after { height: 100%; }
+
+  .skill-icon {
+    width: 32px; height: 32px;
+    margin-bottom: 1rem;
+  }
+  .skill-name {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.01em;
+  }
+  .skill-desc {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── IMPACT NUMBERS ── */
+  .impact-section {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 7rem 10vw;
+  }
+  .impact-section .section-title { color: var(--paper); }
+  .impact-section .section-number { color: var(--gold-light); }
+
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 5rem;
+    border-top: 1px solid rgba(245,242,236,0.1);
+  }
+  .impact-item {
+    padding: 3rem 2rem 3rem 0;
+    border-right: 1px solid rgba(245,242,236,0.1);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .impact-item:last-child { border-right: none; padding-left: 2rem; }
+  .impact-item.visible { opacity: 1; transform: translateY(0); }
+
+  .impact-number {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 300;
+    color: var(--gold-light);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .impact-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,242,236,0.5);
+    margin-top: 0.75rem;
+    line-height: 1.6;
+  }
+
+  /* ── STACK ── */
+  .stack-section {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 8rem;
+    align-items: start;
+  }
+  .stack-list {
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .stack-category {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    align-items: baseline;
+    gap: 2rem;
+    opacity: 0;
+    transform: translateX(-12px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .stack-category.visible { opacity: 1; transform: translateX(0); }
+  .stack-cat-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .stack-items {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .stack-items strong { color: var(--ink); font-weight: 400; }
+
+  .stack-visual { position: relative; }
+
+  /* ── CLOSING ── */
+  .closing-section {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .closing-bg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .closing-quote {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    max-width: 22ch;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+  .closing-quote.visible { opacity: 1; transform: translateY(0); }
+  .closing-quote em { font-style: italic; color: var(--gold); }
+  .closing-sub {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 2rem;
+    opacity: 0;
+    transition: opacity 1s 0.3s ease;
+  }
+  .closing-sub.visible { opacity: 1; }
+
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 3rem;
+    padding: 1rem 2rem;
+    border: 1px solid var(--rule);
+    text-decoration: none;
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: border-color 0.3s, background 0.3s;
+    opacity: 0;
+    transition: opacity 1s 0.5s ease, border-color 0.3s, background 0.3s;
+  }
+  .contact-link.visible { opacity: 1; }
+  .contact-link:hover { border-color: var(--gold); background: rgba(184,150,90,0.04); }
+
+  /* Footer */
+  footer {
+    padding: 2rem 10vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--rule);
+  }
+  footer span {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes expandLine {
+    from { transform: scaleX(0); opacity: 0; }
+    to { transform: scaleX(1); opacity: 1; }
+  }
+
+  /* reveal utility */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="progress-bar" id="progressBar"></div>
+
+<nav>
+  <div class="nav-logo">Roman Czerwinski</div>
+  <ul class="nav-links">
+    <li><a href="#story">Story</a></li>
+    <li><a href="#career">Career</a></li>
+    <li><a href="#stack">Stack</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero" id="hero">
+  <div class="hero-bg-text">Engineer</div>
+  <div class="hero-eyebrow">Senior Software Engineer · Chicago, IL</div>
+  <h1>Roman<br><em>Czerwinski</em></h1>
+  <p class="hero-desc">Supply chain to data pipelines to full-stack systems. A career defined by relentless learning and compounding capability.</p>
+  <div class="hero-meta">
+    <div class="meta-item">
+      <span class="meta-label">Experience</span>
+      <span class="meta-value">9+ Years</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Current</span>
+      <span class="meta-value">Lark Health</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Accolades</span>
+      <span class="meta-value">Eagle Scout</span>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span class="scroll-label">Scroll to explore</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── STORY ── -->
+<section id="story">
+  <div class="story-section">
+    <div class="story-text">
+      <div class="section-number reveal">01 — Origin</div>
+      <h2 class="section-title reveal" style="transition-delay:0.1s">A different kind of engineer.</h2>
+      <br>
+      <p class="reveal" style="transition-delay:0.2s">Roman didn't start by writing code. He started by <strong>watching inefficiency and fixing it</strong> — automating reports, reclaiming hours, and turning spreadsheets into strategy at KeHE Distributors.</p>
+      <p class="reveal" style="transition-delay:0.3s">That instinct to build led him through data engineering at Zoro, two distinct roles at Amazon, and now into compassionate healthcare technology at Lark Health. Each transition was deliberate, each one expanding his range.</p>
+      <div class="origin-badge reveal" style="transition-delay:0.4s">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <circle cx="7" cy="7" r="6" stroke="#b8965a" stroke-width="1"/>
+          <path d="M7 4v3l2 1" stroke="#b8965a" stroke-width="1" stroke-linecap="round"/>
+        </svg>
+        <span>Economics → Analytics → Data Eng → Full Stack</span>
+      </div>
+    </div>
+
+    <!-- Trajectory SVG -->
+    <div class="trajectory-svg-wrap reveal" style="transition-delay:0.3s">
+      <svg viewBox="0 0 440 480" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;">
+        <defs>
+          <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#b8965a"/>
+            <stop offset="100%" stop-color="#b8965a" stop-opacity="0.2"/>
+          </linearGradient>
+          <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M1 1 L4 4 L1 7" stroke="#b8965a" stroke-width="1" fill="none"/>
+          </marker>
+        </defs>
+
+        <!-- Grid lines -->
+        <line x1="60" y1="40" x2="60" y2="440" stroke="rgba(14,14,13,0.07)" stroke-width="1"/>
+        <line x1="60" y1="440" x2="420" y2="440" stroke="rgba(14,14,13,0.07)" stroke-width="1"/>
+
+        <!-- Trajectory path -->
+        <path d="M80 400 C120 390, 140 340, 160 320 C180 300, 200 280, 220 250 C240 220, 260 190, 280 160 C300 130, 320 110, 350 90 C370 78, 390 68, 410 60" 
+              stroke="url(#lineGrad)" stroke-width="1.5" stroke-dasharray="4 3" fill="none"
+              class="trajectory-path"/>
+
+        <!-- Data points -->
+        <g>
+          <circle cx="80" cy="400" r="4" fill="var(--paper)" stroke="#b8965a" stroke-width="1.5"/>
+          <text x="88" y="404" font-family="'DM Mono',monospace" font-size="9" fill="#7a7570" letter-spacing="0.05em">SUPPLY CHAIN</text>
+          <text x="88" y="416" font-family="'DM Mono',monospace" font-size="8" fill="rgba(122,117,112,0.5)" letter-spacing="0.05em">KeHE · 2016</text>
+        </g>
+        <g>
+          <circle cx="160" cy="320" r="4" fill="var(--paper)" stroke="#b8965a" stroke-width="1.5"/>
+          <text x="168" y="324" font-family="'DM Mono',monospace" font-size="9" fill="#7a7570" letter-spacing="0.05em">ANALYTICS</text>
+          <text x="168" y="336" font-family="'DM Mono',monospace" font-size="8" fill="rgba(122,117,112,0.5)" letter-spacing="0.05em">KeHE · 2017</text>
+        </g>
+        <g>
+          <circle cx="220" cy="250" r="4" fill="var(--paper)" stroke="#b8965a" stroke-width="1.5"/>
+          <text x="228" y="254" font-family="'DM Mono',monospace" font-size="9" fill="#7a7570" letter-spacing="0.05em">DATA ENGINEER</text>
+          <text x="228" y="266" font-family="'DM Mono',monospace" font-size="8" fill="rgba(122,117,112,0.5)" letter-spacing="0.05em">Zoro · 2018</text>
+        </g>
+        <g>
+          <circle cx="290" cy="180" r="4" fill="var(--paper)" stroke="#b8965a" stroke-width="1.5"/>
+          <text x="298" y="184" font-family="'DM Mono',monospace" font-size="9" fill="#7a7570" letter-spacing="0.05em">DATA ENG II</text>
+          <text x="298" y="196" font-family="'DM Mono',monospace" font-size="8" fill="rgba(122,117,112,0.5)" letter-spacing="0.05em">Amazon · 2021</text>
+        </g>
+        <g>
+          <circle cx="350" cy="118" r="4" fill="var(--paper)" stroke="#b8965a" stroke-width="1.5"/>
+          <text x="358" y="122" font-family="'DM Mono',monospace" font-size="9" fill="#7a7570" letter-spacing="0.05em">SWE II</text>
+          <text x="358" y="134" font-family="'DM Mono',monospace" font-size="8" fill="rgba(122,117,112,0.5)" letter-spacing="0.05em">Amazon · 2023</text>
+        </g>
+        <g>
+          <circle cx="400" cy="76" r="5" fill="#b8965a" stroke="#b8965a" stroke-width="1.5"/>
+          <text x="372" y="62" font-family="'DM Mono',monospace" font-size="9" fill="#b8965a" letter-spacing="0.05em">SR SWE</text>
+          <text x="372" y="50" font-family="'DM Mono',monospace" font-size="8" fill="rgba(184,150,90,0.7)" letter-spacing="0.05em">Lark · 2024</text>
+        </g>
+
+        <!-- Y axis label -->
+        <text transform="rotate(-90,22,240)" x="22" y="244" font-family="'DM Mono',monospace" font-size="8" fill="rgba(122,117,112,0.4)" letter-spacing="0.1em">CAPABILITY</text>
+        <text x="200" y="460" font-family="'DM Mono',monospace" font-size="8" fill="rgba(122,117,112,0.4)" letter-spacing="0.1em">TIME →</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── IMPACT ── -->
+<section class="impact-section" id="impact">
+  <div class="section-number">02 — By the numbers</div>
+  <h2 class="section-title reveal">Measurable results,<br><em style="font-style:italic;color:var(--gold-light)">compounding over time.</em></h2>
+  <div class="impact-grid">
+    <div class="impact-item">
+      <div class="impact-number">20</div>
+      <div class="impact-label">Work hours saved<br>per week through<br>automated reporting</div>
+    </div>
+    <div class="impact-item" style="padding-left:2rem;">
+      <div class="impact-number">9+</div>
+      <div class="impact-label">Years from<br>Excel to AWS CDK<br>& full-stack systems</div>
+    </div>
+    <div class="impact-item" style="padding-left:2rem;">
+      <div class="impact-number">5</div>
+      <div class="impact-label">Cloud platforms<br>mastered across<br>AWS & GCP</div>
+    </div>
+    <div class="impact-item" style="padding-left:2rem;">
+      <div class="impact-number">4</div>
+      <div class="impact-label">Distinct engineering<br>disciplines across<br>one career</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── CAREER ── -->
+<section id="career">
+  <div class="section-number reveal">03 — Career Arc</div>
+  <h2 class="section-title reveal" style="margin-bottom:4rem;transition-delay:0.1s">Every role a<br>new capability unlocked.</h2>
+
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-meta">
+        <span class="timeline-date">Dec 2024 – Present</span>
+        <span class="timeline-company">Lark Health</span>
+      </div>
+      <div class="timeline-role">Senior Software Engineer</div>
+      <div class="timeline-tags">
+        <span class="tag">Healthcare Tech</span>
+        <span class="tag">Full Stack</span>
+        <span class="tag">Patient Outcomes</span>
+      </div>
+      <p class="timeline-detail">Building compassionate technology at the intersection of health and software — translating clinical workflows into robust, scalable patient-facing systems.</p>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-meta">
+        <span class="timeline-date">May 2023 – Nov 2024</span>
+        <span class="timeline-company">Amazon</span>
+      </div>
+      <div class="timeline-role">Software Engineer II</div>
+      <div class="timeline-tags">
+        <span class="tag">TypeScript</span>
+        <span class="tag">React</span>
+        <span class="tag">Go</span>
+        <span class="tag">Java</span>
+        <span class="tag">AWS</span>
+        <span class="tag">DynamoDB</span>
+      </div>
+      <p class="timeline-detail">Designed full-stack systems solving real business problems — real-time notification engines, employee payment platforms, and data science automation. Full ownership from frontend to infra-as-code.</p>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-meta">
+        <span class="timeline-date">Oct 2021 – May 2023</span>
+        <span class="timeline-company">Amazon</span>
+      </div>
+      <div class="timeline-role">Data Engineer II</div>
+      <div class="timeline-tags">
+        <span class="tag">AWS CDK</span>
+        <span class="tag">Redshift</span>
+        <span class="tag">Glue</span>
+        <span class="tag">Kinesis</span>
+        <span class="tag">Python</span>
+        <span class="tag">CICD</span>
+      </div>
+      <p class="timeline-detail">Founded the IaC and CICD practice for a new team from zero. Built the data warehouse, streaming pipelines, real-time quality monitoring, and reverse ETL flows that kept a business unit's data heartbeat alive.</p>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-meta">
+        <span class="timeline-date">Nov 2018 – Oct 2021</span>
+        <span class="timeline-company">Zoro US</span>
+      </div>
+      <div class="timeline-role">Data Engineer → Senior Data Engineer</div>
+      <div class="timeline-tags">
+        <span class="tag">BigQuery</span>
+        <span class="tag">Apache Spark</span>
+        <span class="tag">Airflow</span>
+        <span class="tag">GCP</span>
+        <span class="tag">Kubernetes</span>
+      </div>
+      <p class="timeline-detail">Migrated an entire data platform from AWS Redshift to GCP BigQuery. Built the Customer Acquisition pipeline, designed CCPA compliance automation, and trained the next generation of data engineers.</p>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-meta">
+        <span class="timeline-date">Jan 2017 – Nov 2018</span>
+        <span class="timeline-company">KeHE Distributors</span>
+      </div>
+      <div class="timeline-role">Supply Chain → Reporting & Analytics Manager</div>
+      <div class="timeline-tags">
+        <span class="tag">SQL</span>
+        <span class="tag">VBA</span>
+        <span class="tag">Power BI</span>
+        <span class="tag">Cognos</span>
+        <span class="tag">Excel</span>
+      </div>
+      <p class="timeline-detail">The origin. Recognized inefficiency in a 20-person team, automated it away, and reclaimed 20 hours a week. Built the BI foundation for a billion-dollar client relationship. Learned that code is a force multiplier.</p>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── STACK ── -->
+<section id="stack">
+  <div class="section-number reveal">04 — Technical Stack</div>
+  <h2 class="section-title reveal" style="transition-delay:0.1s">Tools mastered<br>in the field.</h2>
+
+  <div style="margin-top:4rem;">
+    <div class="stack-category">
+      <span class="stack-cat-label">Languages</span>
+      <span class="stack-items"><strong>TypeScript</strong> · <strong>Python</strong> · <strong>Go</strong> · Java · SQL · VBA</span>
+    </div>
+    <div class="stack-category">
+      <span class="stack-cat-label">Frontend</span>
+      <span class="stack-items"><strong>React</strong> · React Native · HTML/CSS</span>
+    </div>
+    <div class="stack-category">
+      <span class="stack-cat-label">Cloud / AWS</span>
+      <span class="stack-items"><strong>CDK</strong> · Lambda · ECS · API Gateway · Redshift · DynamoDB · Glue · Kinesis · S3 · CloudWatch · EventBridge · Step Functions</span>
+    </div>
+    <div class="stack-category">
+      <span class="stack-cat-label">Cloud / GCP</span>
+      <span class="stack-items">BigQuery · Dataproc · Dataflow · Cloud Composer · GKE · Cloud Functions · GCS</span>
+    </div>
+    <div class="stack-category">
+      <span class="stack-cat-label">Data</span>
+      <span class="stack-items"><strong>Apache Spark</strong> · Apache Airflow · MongoDB · Apache Beam · Redshift Spectrum</span>
+    </div>
+    <div class="stack-category">
+      <span class="stack-cat-label">Practices</span>
+      <span class="stack-items"><strong>IaC</strong> · CICD · Microservices · Event-Driven Architecture · REST APIs · Agile</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SKILLS GRID ── -->
+<section>
+  <div class="section-number reveal">05 — Core Capabilities</div>
+  <h2 class="section-title reveal" style="transition-delay:0.1s">What I bring<br>to any team.</h2>
+  <div class="skills-grid">
+
+    <div class="skill-cell">
+      <svg class="skill-icon" viewBox="0 0 32 32" fill="none">
+        <rect x="4" y="8" width="24" height="16" rx="2" stroke="#b8965a" stroke-width="1.2"/>
+        <path d="M10 16l3 3 5-6" stroke="#b8965a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M20 14h4M20 18h3" stroke="rgba(184,150,90,0.5)" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+      <div class="skill-name">Systems Thinking</div>
+      <div class="skill-desc">End-to-end architecture from data ingest to UI delivery</div>
+    </div>
+
+    <div class="skill-cell">
+      <svg class="skill-icon" viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="10" stroke="#b8965a" stroke-width="1.2"/>
+        <path d="M16 8v4M16 20v4M8 16h4M20 16h4" stroke="rgba(184,150,90,0.5)" stroke-width="1" stroke-linecap="round"/>
+        <circle cx="16" cy="16" r="3" fill="#b8965a" fill-opacity="0.3" stroke="#b8965a" stroke-width="1"/>
+      </svg>
+      <div class="skill-name">Cloud Native</div>
+      <div class="skill-desc">Deep AWS & GCP across compute, storage, streaming, and IaC</div>
+    </div>
+
+    <div class="skill-cell">
+      <svg class="skill-icon" viewBox="0 0 32 32" fill="none">
+        <path d="M6 26 L6 12 L16 6 L26 12 L26 26 Z" stroke="#b8965a" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M12 26v-7h8v7" stroke="#b8965a" stroke-width="1.2" stroke-linejoin="round"/>
+        <circle cx="16" cy="13" r="2" stroke="rgba(184,150,90,0.7)" stroke-width="1"/>
+      </svg>
+      <div class="skill-name">Full Stack</div>
+      <div class="skill-desc">TypeScript React frontends through Golang & Java backends</div>
+    </div>
+
+    <div class="skill-cell">
+      <svg class="skill-icon" viewBox="0 0 32 32" fill="none">
+        <path d="M6 20 Q10 8 16 14 Q22 20 26 8" stroke="#b8965a" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="6" cy="20" r="2" fill="#b8965a" fill-opacity="0.4"/>
+        <circle cx="16" cy="14" r="2" fill="#b8965a" fill-opacity="0.4"/>
+        <circle cx="26" cy="8" r="2" fill="#b8965a"/>
+      </svg>
+      <div class="skill-name">Data Engineering</div>
+      <div class="skill-desc">ETL pipelines, streaming, warehousing & lake architecture</div>
+    </div>
+
+    <div class="skill-cell">
+      <svg class="skill-icon" viewBox="0 0 32 32" fill="none">
+        <rect x="5" y="14" width="7" height="12" rx="1" stroke="#b8965a" stroke-width="1.2"/>
+        <rect x="13" y="9" width="7" height="17" rx="1" stroke="#b8965a" stroke-width="1.2"/>
+        <rect x="21" y="4" width="7" height="22" rx="1" stroke="#b8965a" stroke-width="1.2" fill="#b8965a" fill-opacity="0.1"/>
+      </svg>
+      <div class="skill-name">Analytics & BI</div>
+      <div class="skill-desc">Power BI, Cognos, SQL — turning data into decisions</div>
+    </div>
+
+    <div class="skill-cell">
+      <svg class="skill-icon" viewBox="0 0 32 32" fill="none">
+        <path d="M8 24 L24 8" stroke="#b8965a" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="8" cy="24" r="3" stroke="#b8965a" stroke-width="1.2"/>
+        <circle cx="24" cy="8" r="3" stroke="#b8965a" stroke-width="1.2"/>
+        <path d="M14 18 Q17 14 20 13" stroke="rgba(184,150,90,0.4)" stroke-width="1" stroke-dasharray="2 2" stroke-linecap="round"/>
+      </svg>
+      <div class="skill-name">Fast Learner</div>
+      <div class="skill-desc">Economics grad to senior engineer across 9 years of deliberate growth</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── CLOSING ── -->
+<section class="closing-section">
+  <div class="closing-bg">
+    <svg viewBox="0 0 800 400" style="width:80%;opacity:0.03;">
+      <text x="50%" y="60%" dominant-baseline="middle" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="200" fill="#0e0e0d">RC</text>
+    </svg>
+  </div>
+  <p class="closing-quote">I don't just write code.<br>I find the <em>leverage point</em><br>and build toward it.</p>
+  <p class="closing-sub">Available for the right opportunity.</p>
+  <a href="https://www.linkedin.com/in/roman-czerwinski-4a253489/" target="_blank" class="contact-link">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1"/>
+      <path d="M4 6v4M4 4v.5M6.5 10V7.5c0-1 1.5-1 1.5 0V10M8 7.5V6" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+    </svg>
+    LinkedIn Profile
+  </a>
+</section>
+
+<footer>
+  <span>Roman Czerwinski — Portfolio</span>
+  <span>Chicago, IL · 2026</span>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animCursor() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+
+  // Progress bar
+  const bar = document.getElementById('progressBar');
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+    bar.style.width = pct + '%';
+  });
+
+  // Intersection observer for reveals
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal, .timeline-item, .skill-cell, .impact-item, .stack-category, .closing-quote, .closing-sub, .contact-link').forEach(el => {
+    observer.observe(el);
+  });
+
+  // Stagger skill cells
+  document.querySelectorAll('.skill-cell').forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.08) + 's';
+  });
+
+  // Stagger impact items
+  document.querySelectorAll('.impact-item').forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.12) + 's';
+  });
+
+  // Stagger stack categories
+  document.querySelectorAll('.stack-category').forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.07) + 's';
+  });
+
+  // Stagger timeline items
+  document.querySelectorAll('.timeline-item').forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.1) + 's';
+  });
+</script>
+</body>
+</html>
