@@ -1,0 +1,24 @@
+name: Deploy
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/deploy.yml
+      - 'public/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Deploy to Cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUD_FLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUD_FLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.90.1"
+          command: deploy -c wrangler.jsonc
